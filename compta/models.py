@@ -32,6 +32,9 @@ class Transaction(models.Model):
     def __str__(self):
         return self.nom
 
+# Faudra regarder pour les transitoire comment faire
+# Est ce qu'on fait des vrais transitoires, dans ce cas regardera quand fera un truc de cloture des comptes
+# Si fait en sort que prenne en compte le retour attendu sur un achat, devra peut être regarder plus tot
 
 @receiver(models.signals.post_save, sender=Transaction)
 def execute_after_save(sender, instance, created, *args, **kwargs):
