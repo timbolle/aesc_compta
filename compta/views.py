@@ -11,7 +11,7 @@ def index(request):
 def detail_compte(request, pk):
     try:
         compte = Compte.objects.get(pk=pk)
-        transac = Transaction.objects.get(compte=pk)
+        transac = Transaction.objects.filter(compte=pk)
     except:
         raise Http404("Le compte spécifié n'existe pas!")
     return render(request, "compta/detail_compte.html", {'compte': compte, 'transac':transac})
@@ -19,7 +19,7 @@ def detail_compte(request, pk):
 def detail_budget(request, pk):
     try:
         budget = Budget.objects.get(pk=pk)
-        transac = Transaction.objects.get(compte=pk)
+        transac = Transaction.objects.filter(compte=pk)
     except:
         raise Http404("Le Budget spécifié n'existe pas!")
     return render(request, "compta/detail_budget.html", {'budget': budget, 'transac':transac})

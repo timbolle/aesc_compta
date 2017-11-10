@@ -1,7 +1,7 @@
 {% extends "compta/header.html" %}
 {% block content %}
-    <h2>Transactions du compte {% compte.nom %}</h2>
-    <p>Montant initial: {% compte.somme_depart %} CHF</p>
+    <h2>Transactions du compte {{ compte.nom }}</h2>
+    <p>Montant initial: {{ compte.somme_depart }} CHF</p>
         <table class="table table-striped">
             <thead>
               <tr>
@@ -32,6 +32,6 @@
                 {% endfor %}
             </tbody>
         </table>
-    <p>Montant final: {% compte.somme_actuelle %} CHF</p>
+    <p>Montant final: {{ compte.somme_actuelle }} CHF</p>
 
 {% endblock %}

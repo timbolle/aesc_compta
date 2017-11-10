@@ -22,9 +22,9 @@ class Budget(models.Model):
 
 class Transaction(models.Model):
     nom = models.CharField(max_length=140)
+    somme = models.DecimalField(max_digits=11, decimal_places=2)
     compte = models.ForeignKey(Compte, on_delete=models.CASCADE)
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE, blank=True, null=True)
-    somme = models.DecimalField(max_digits=11, decimal_places=2)
     date = models.DateField()
     date_traitement = models.DateField(default=datetime.now)
     description = models.TextField()
