@@ -1,6 +1,6 @@
 {% extends "compta/header.html" %}
 {% block content %}
-    <h2>Transactions</h2>
+    <h2 xmlns="http://www.w3.org/1999/html">Transactions</h2>
         <table class="table table-striped">
             <thead>
               <tr>
@@ -31,4 +31,8 @@
                 {% endfor %}
             </tbody>
         </table>
+    <form method="post" action="{% url 'export_csv' %}" class="js-export-form">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Export</button>
+    </form>
 {% endblock %}
