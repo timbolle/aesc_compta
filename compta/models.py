@@ -1,12 +1,12 @@
 from django.db import models
 from django.dispatch import receiver
+from datetime import datetime
 
 class Compte(models.Model):
     nom = models.CharField(max_length = 140)
     somme_depart = models.DecimalField( max_digits=11, decimal_places=2)
     somme_actuelle = models.DecimalField(max_digits=11, decimal_places=2)
-    # somme_depart = models.FloatField()
-    # somme_actuelle = models.FloatField()
+
 
     def __str__(self):
         return self.nom
@@ -15,8 +15,6 @@ class Budget(models.Model):
     nom = models.CharField(max_length = 140)
     somme_depart = models.DecimalField(max_digits=11, decimal_places=2)
     somme_actuelle = models.DecimalField(max_digits=11, decimal_places=2)
-    # somme_depart = models.FloatField()
-    # somme_actuelle = models.FloatField()
 
 
     def __str__(self):
@@ -28,6 +26,7 @@ class Transaction(models.Model):
     budget = models.ForeignKey(Budget, on_delete=models.CASCADE, blank=True, null=True)
     somme = models.DecimalField(max_digits=11, decimal_places=2)
     date = models.DateField()
+    date_traitement = models.DateField(default=datetime.now)
     description = models.TextField()
 
     def __str__(self):
