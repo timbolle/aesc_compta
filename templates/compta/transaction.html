@@ -35,4 +35,5 @@
         {% csrf_token %}
         <button type="submit" class="btn btn-danger">Export</button>
     </form>
+    {% include 'compta/includes/export_snippet.html' %}
 {% endblock %}
