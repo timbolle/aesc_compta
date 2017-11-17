@@ -14,3 +14,4 @@
 #TODO +++ Genre de gestion de stock
 #TODO +++ Pure transitoire
 #TODO + Cloture des comptes
+#TODO + Integrer les factures en pdf

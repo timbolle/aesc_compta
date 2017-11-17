@@ -3,8 +3,8 @@
     <button type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
     Export As...<span class="caret"></span></button>
     <ul class="dropdown-menu" role="menu">
-      <li><a href="/export?type=CSV">CSV</a></li>
-      <li><a href="/export?type=Excel">Excel</a></li>
-      <li><a href="/export?type=PDF">PDF</a></li>
+      <li><a href="/export?type=CSV&origin={{ request.path }}">CSV</a></li>
+      <li><a href="/export?type=Excel&origin={{ request.path }}">Excel</a></li>
+      <li><a href="/export?type=PDF&origin={{ request.path }}">PDF</a></li>
     </ul>
   </div>{% endblock %}

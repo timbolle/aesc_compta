@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, Http404
 from compta.models import Transaction, Compte, Budget
-import csv, xlwt
+import csv, xlwt, re
 from datetime import datetime
 
 def hello(request):
@@ -21,7 +21,7 @@ def detail_compte(request, pk):
 def detail_budget(request, pk):
     try:
         budget = Budget.objects.get(pk=pk)
-        transac = Transaction.objects.filter(compte=pk)
+        transac = Transaction.objects.filter(budget=pk)
     except:
         raise Http404("Le Budget spécifié n'existe pas!")
     return render(request, "compta/detail_budget.html", {'budget': budget, 'transac':transac})
@@ -103,28 +103,37 @@ def export_excel(data):
 
 def export(request):
     export_type = request.GET.get('type', '')
+    ref = request.GET.get('origin', '').strip("/")
     try:
-        ref = request.META["HTTP_REFERER"].split("/")[-1]
+        request.META["HTTP_REFERER"]
     except:
-        raise Http404("NOT OK!! GET OUT --> []")
+        raise Http404("NOT OK!! GET OUT --> [1]")
 
-    if ref not in ["comptes","budgets","transactions"] or export_type not in ["CSV","Excel","PDF"]:
-        raise Http404("NOT OK!! GET OUT --> []")
+    if re.match(r'(compte/\d+)|(budget/\d+)|transactions',ref) is None or export_type not in ["CSV","Excel","PDF"]:
+        raise Http404("NOT OK!! GET OUT --> [2]")
 
     data={} # contiendra une somme de depart, une somme actuelle et une liste de transactions
-    if ref == "transactions":
-        # prend  pour tous les comptes
+    if re.match(r'transactions', ref):
+        # prend  pour tous les comptes et budgets
         comptes = Compte.objects.all()
         budgets = Budget.objects.all()
-        data["comptes"] = [c.nom for c in comptes]+["+".join([c.nom for c in comptes])]
-        data["comptes_solde_ini"] = [c.somme_depart for c in comptes]+[sum([c.somme_depart for c in comptes])]
-        data["comptes_solde_actu"] = [c.somme_actuelle for c in comptes]+[sum([c.somme_actuelle for c in comptes])]
-
-        data["budgets"] = [c.nom for c in budgets]+["+".join([c.nom for c in budgets])]
-        data["budgets_solde_ini"] = [c.somme_depart for c in budgets]+[sum([c.somme_depart for c in budgets])]
-        data["budgets_solde_actu"] = [c.somme_actuelle for c in budgets]+[sum([c.somme_actuelle for c in budgets])]
-
+        data = get_data(comptes,budgets)
         data["transactions"] = [[t.nom, datetime.strftime(t.date,"%d.%m.%y"), str(t.somme), t.compte.nom, t.budget.nom if t.budget is not None else str(None), t.description.replace("\r\n"," ")] for t in Transaction.objects.all()]
+
+    elif re.match(r'compte/\d+', ref):
+        pk = int(re.match(r"compte/(?P<pk>\d+)", ref)["pk"])
+        comptes = Compte.objects.filter(pk= pk)
+        data = get_data(comptes=comptes)
+        data["transactions"] = [[t.nom, datetime.strftime(t.date,"%d.%m.%y"), str(t.somme), t.compte.nom, t.budget.nom if t.budget is not None else str(None), t.description.replace("\r\n"," ")] for t in Transaction.objects.filter(compte=pk)]
+
+    elif re.match(r'budget/\d+', ref):
+        pk = int(re.match(r"budget/(?P<pk>\d+)", ref)["pk"])
+        budgets = Budget.objects.filter(pk= pk)
+        data = get_data(budgets=budgets)
+        data["transactions"] = [[t.nom, datetime.strftime(t.date,"%d.%m.%y"), str(t.somme), t.compte.nom, t.budget.nom if t.budget is not None else str(None), t.description.replace("\r\n"," ")] for t in Transaction.objects.filter(budget=pk)]
+
+    else:
+        raise Http404("NOT OK!! GET OUT --> [3]")
 
     if export_type == "CSV":
         reponse = export_csv(data)
@@ -136,3 +145,17 @@ def export(request):
 
     to_print = "<h2>{} {}</h2>".format(export_type, request.META["HTTP_REFERER"])
     return HttpResponse(to_print)
+
+
+def get_data(comptes=None, budgets=None):
+    data = {}
+    if comptes:
+        data["comptes"] = [c.nom for c in comptes] + (["+".join([c.nom for c in comptes])] if len(comptes)>1 else [])
+        data["comptes_solde_ini"] = [c.somme_depart for c in comptes] + ([sum([c.somme_depart for c in comptes])] if len(comptes)>1 else [])
+        data["comptes_solde_actu"] = [c.somme_actuelle for c in comptes] + ([sum([c.somme_actuelle for c in comptes])] if len(comptes)>1 else [])
+    if budgets:
+        data["budgets"] = [c.nom for c in budgets] + (["+".join([c.nom for c in budgets])] if len(budgets) > 1 else [])
+        data["budgets_solde_ini"] = [c.somme_depart for c in budgets] + ([sum([c.somme_depart for c in budgets])] if len(budgets) > 1 else [])
+        data["budgets_solde_actu"] = [c.somme_actuelle for c in budgets] + ([sum([c.somme_actuelle for c in budgets])] if len(budgets) > 1 else [])
+
+    return data

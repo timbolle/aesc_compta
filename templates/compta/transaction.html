@@ -31,9 +31,9 @@
                 {% endfor %}
             </tbody>
         </table>
-    <form method="post" action="{% url 'export_csv' %}" class="js-export-form">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Export</button>
-    </form>
+{#    <form method="post" action="{% url 'export_csv' %}" class="js-export-form">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit" class="btn btn-danger">Export</button>#}
+{#    </form>#}
     {% include 'compta/includes/export_snippet.html' %}
 {% endblock %}
