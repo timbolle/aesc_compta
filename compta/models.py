@@ -2,6 +2,10 @@ from django.db import models
 from django.dispatch import receiver
 from datetime import datetime
 
+def facture_path(instance, filename):
+    print(instance.id)
+    return 'factures/{0}/{1}'.format(instance.id,filename)
+
 class Compte(models.Model):
     nom = models.CharField(max_length = 140)
     somme_depart = models.DecimalField( max_digits=11, decimal_places=2)
@@ -28,6 +32,8 @@ class Transaction(models.Model):
     date = models.DateField()
     date_traitement = models.DateField(default=datetime.now)
     description = models.TextField()
+
+    facture = models.FileField(upload_to=facture_path, blank=True, null=True)
 
     def __str__(self):
         return self.nom
@@ -56,3 +62,5 @@ def execute_before_delete(sender, instance, using, *args, **kwargs):
         b = Budget.objects.get(nom=instance.budget)
         b.somme_actuelle -= instance.somme  # change field
         b.save()  # this will update only
+
+
