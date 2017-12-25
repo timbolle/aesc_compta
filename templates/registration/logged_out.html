@@ -1,0 +1,8 @@
+{# The name logged_out.html is important: if not here -> send to the admin logged_out page#}
+{% extends "compta/header.html" %}
+
+{% block content %}
+<p>Logged out!</p>  
+
+<a href="{% url 'login'%}">Click here to login again.</a>
+{% endblock %}
