@@ -1,15 +1,21 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView
+from django.utils.decorators import method_decorator
 from django.http import HttpResponse, Http404
 from compta.models import Transaction, Compte, Budget
 import csv, xlwt, re
 from datetime import datetime
+from django.contrib.auth.decorators import login_required
+
 
 def hello(request):
     return HttpResponse("<h2>HEY! you</h2>")
 
+@login_required
 def index(request):
     return render(request, 'compta/home.html')
 
+@login_required
 def detail_compte(request, pk):
     try:
         compte = Compte.objects.get(pk=pk)
@@ -18,6 +24,7 @@ def detail_compte(request, pk):
         raise Http404("Le compte spécifié n'existe pas!")
     return render(request, "compta/detail_compte.html", {'compte': compte, 'transac':transac})
 
+@login_required
 def detail_budget(request, pk):
     try:
         budget = Budget.objects.get(pk=pk)
@@ -26,6 +33,13 @@ def detail_budget(request, pk):
         raise Http404("Le Budget spécifié n'existe pas!")
     return render(request, "compta/detail_budget.html", {'budget': budget, 'transac':transac})
 
+class ListingView(ListView):
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+@login_required
 def export_csv(data):
     # Create the HttpResponse object with the appropriate CSV header.
     response = HttpResponse(content_type='text/csv')
@@ -45,6 +59,7 @@ def export_csv(data):
 
     return response
 
+@login_required
 def export_excel(data):
     response = HttpResponse(content_type='application/ms-excel')
     response['Content-Disposition'] = 'attachment; filename="export.xls"'
@@ -101,6 +116,7 @@ def export_excel(data):
     return response
 
 
+@login_required
 def export(request):
     export_type = request.GET.get('type', '')
     ref = request.GET.get('origin', '').strip("/")
@@ -147,6 +163,7 @@ def export(request):
     return HttpResponse(to_print)
 
 
+@login_required
 def get_data(comptes=None, budgets=None):
     data = {}
     if comptes:
