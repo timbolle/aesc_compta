@@ -16,6 +16,7 @@
                 {% for c in object_list %}
                     <tr>
                         <td>{{ c.date|date:"Y-m-d" }}</td>
+                        <td>{{ c.date_traitement|date:"Y-m-d" }}</td>
                         <td>{{ c.nom }}</td>
                         <td>
                             {% if  c.somme > 0 %}
@@ -27,6 +28,7 @@
                         <td>{{ c.compte }}</td>
                         <td>{{ c.budget }}</td>
                         <td>{{ c.description }}</td>
+                        <td><a href=""></a>{{ c.description }}</td>
                     </tr>
                 {% endfor %}
             </tbody>

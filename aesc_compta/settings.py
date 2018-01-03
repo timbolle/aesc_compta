@@ -123,8 +123,16 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+
 # Redirect to home URL after login (Default redirects to /accounts/profile/)
 LOGIN_REDIRECT_URL = '/'
 
 # https://developer.mozilla.org/en-US/docs/Learn/Server-side/Django/Authentication
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# media root
+ENV_PATH = os.path.abspath(os.path.dirname(__file__))
+MEDIA_ROOT = os.path.join(BASE_DIR, 'docs/')
+
+MEDIA_URL = "/docs/"
+

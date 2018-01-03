@@ -3,6 +3,7 @@ from . import views
 from django.views.generic import ListView, DetailView
 from compta.models import Compte, Budget, Transaction
 
+
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^hello$', views.hello, name='hello'),
