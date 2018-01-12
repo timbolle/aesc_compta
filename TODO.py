@@ -15,3 +15,13 @@
 #TODO +++ Pure transitoire
 #TODO + Cloture des comptes
 #TODO + Integrer les factures en pdf
+
+
+#DONE Creation d'une nouvelle app pour le login
+# (ou pas? pas sur que bonne idee, juste dossier avec un fichier avec la nouvelle classe peut suffir)
+# http://www.techinfected.net/2016/11/style-django-forms-with-bootstrap.html
+# http://www.techinfected.net/2016/10/install-and-use-django-crispy-forms.html
+# https://docs.djangoproject.com/fr/2.0/topics/auth/default/#django.contrib.auth.views.LoginView
+# peut etre regarder comment faire une nouvelle classe avec AuthenticationForm dans laquelle modif les classes des input
+
+# Bonne explication des form https://docs.djangoproject.com/en/2.0/topics/forms/
