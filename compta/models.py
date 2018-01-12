@@ -11,6 +11,10 @@ class Compte(models.Model):
     somme_depart = models.DecimalField( max_digits=11, decimal_places=2)
     somme_actuelle = models.DecimalField(max_digits=11, decimal_places=2)
 
+    @property
+    def url(self):
+        return "/compte/"+str(self.pk)
+
 
     def __str__(self):
         return self.nom
@@ -20,6 +24,9 @@ class Budget(models.Model):
     somme_depart = models.DecimalField(max_digits=11, decimal_places=2)
     somme_actuelle = models.DecimalField(max_digits=11, decimal_places=2)
 
+    @property
+    def url(self):
+        return "/compte/"+str(self.pk)
 
     def __str__(self):
         return self.nom

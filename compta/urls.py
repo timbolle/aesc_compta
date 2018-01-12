@@ -16,8 +16,8 @@ urlpatterns = [
     url(r'^transactions$', views.ListingView.as_view(
                         queryset=Transaction.objects.all().order_by("-date"),
                         template_name="compta/transaction.html")),
-    url(r'^compte/(?P<pk>\d+)$', views.detail_compte),
-    url(r'^budget/(?P<pk>\d+)$', views.detail_budget),
+    url(r'^compte/(?P<pk>\d+)$', views.detail_compte, name="detail_compte"),
+    url(r'^budget/(?P<pk>\d+)$', views.detail_budget, name="detail_budget"),
     url(r'^export2', views.export_csv, name="export_csv"),
     url(r'^export', views.export, name="export"),
 ]

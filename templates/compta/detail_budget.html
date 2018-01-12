@@ -1,38 +1,13 @@
 {% extends "compta/header.html" %}
 {% block content %}
     <h2>Transactions du compte {{ budget.nom }}</h2>
+
     <p>Montant initial: {{ budget.somme_depart }} CHF</p>
-        <table class="table table-striped">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Nom</th>
-                <th>Montant</th>
-                <th>Compte</th>
-                <th>Budget</th>
-                <th>Description</th>
-              </tr>
-            </thead>
-            <tbody>
-                {% for c in transac %}
-                    <tr>
-                        <td>{{ c.date|date:"Y-m-d" }}</td>
-                        <td>{{ c.nom }}</td>
-                        <td>
-                            {% if  c.somme > 0 %}
-                                <font color="lawngreen">{{c.somme}}</font>
-                            {% else %}
-                                <font color="red">{{c.somme}}</font>
-                            {% endif %}
-                        </td>
-                        <td>{{ c.compte }}</td>
-                        <td>{{ c.budget }}</td>
-                        <td>{{ c.description }}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
+
+    {% include 'compta/includes/transac.html' with object_list=transac%}
+
     <p>Montant final: {{ budget.somme_actuelle }} CHF</p>
+
     {% include 'compta/includes/export_snippet.html' %}
 
 {% endblock %}

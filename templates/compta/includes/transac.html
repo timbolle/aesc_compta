@@ -1,0 +1,50 @@
+{% block content %}
+<table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Date de traitement</th>
+        <th>Nom</th>
+        <th>Montant</th>
+        <th>Compte</th>
+        <th>Budget</th>
+        <th>Description</th>
+        <th>Facture</th>
+      </tr>
+    </thead>
+    <tbody>
+        {% for c in object_list %}
+            <tr>
+                <td>{{ c.date|date:"Y-m-d" }}</td>
+                <td>{{ c.date_traitement|date:"Y-m-d" }}</td>
+                <td>{{ c.nom }}</td>
+
+                {% if  c.somme > 0 %}
+                    <td class="bg-success">{{c.somme}}</td>
+                {% else %}
+                    <td class="bg-danger">{{c.somme}}</td>
+                {% endif %}
+
+{#                        <td><a href="{{ c.compte.url }}">{{ c.compte }}</a></td>#}
+                <td><a href="{% url 'detail_compte' c.compte.pk %}">{{ c.compte }}</a></td>
+                <td>
+                    {% if c.budget != None %}
+                        <a href="{% url 'detail_budget' c.budget.pk %}">{{ c.budget }}</a>
+                    {% else %}
+                        <p>--</p>
+                    {% endif %}
+                </td>
+                <td>{{ c.description }}</td>
+                <td>
+                    {% if c.facture != None %}
+                        <a target="_blank" href="{{ c.facture.url }}"> {{ c.facture.name }}</a>
+                    {% else %}
+                        <p>--</p>
+                    {% endif %}
+                </td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+{% endblock %}
