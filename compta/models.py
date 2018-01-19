@@ -3,8 +3,8 @@ from django.dispatch import receiver
 from datetime import datetime
 
 def facture_path(instance, filename):
-    print(instance.id)
-    return 'factures/{0}/{1}'.format(instance.id,filename)
+    print(instance.numero)
+    return 'factures/{0}/{1}'.format(instance.numero,filename)
 
 class Compte(models.Model):
     nom = models.CharField(max_length = 140)
@@ -31,7 +31,33 @@ class Budget(models.Model):
     def __str__(self):
         return self.nom
 
+class Meta_Stuff(models.Model):
+    # only one instance
+    transac_number = models.IntegerField(default=1)
+
+    def __str__(self):
+        return self.transac_number
+
+    @classmethod
+    def get_lastnumber(cls):
+        return cls.objects.get(pk=1).transac_number
+
+    @classmethod
+    def increment_lastnumber(cls):
+        new = cls.objects.get(pk=1)
+        new.transac_number += 1
+        new.save()    \
+
+    @classmethod
+    def decrement_lastnumber(cls):
+        new = cls.objects.get(pk=1)
+        if new.transac_number >1:
+            new.transac_number -= 1
+            new.save()
+
+
 class Transaction(models.Model):
+    numero = models.IntegerField(default=Meta_Stuff.get_lastnumber)
     nom = models.CharField(max_length=140)
     somme = models.DecimalField(max_digits=11, decimal_places=2)
     compte = models.ForeignKey(Compte, on_delete=models.CASCADE)
@@ -45,13 +71,20 @@ class Transaction(models.Model):
     def __str__(self):
         return self.nom
 
-# Faudra regarder pour les transitoire comment faire
-# Est ce qu'on fait des vrais transitoires, dans ce cas regardera quand fera un truc de cloture des comptes
-# Si fait en sort que prenne en compte le retour attendu sur un achat, devra peut être regarder plus tot
+    def facture_name(self):
+        return self.facture.name.split('/')[-1]
+
+
+
+
 
 @receiver(models.signals.post_save, sender=Transaction)
 def execute_after_save(sender, instance, created, *args, **kwargs):
     if created:
+        ## transac number
+        Meta_Stuff.increment_lastnumber()
+
+        ## current Compte/budget
         c = Compte.objects.get(nom=instance.compte)
         c.somme_actuelle += instance.somme  # change field
         c.save()  # this will update only
@@ -62,6 +95,10 @@ def execute_after_save(sender, instance, created, *args, **kwargs):
 
 @receiver(models.signals.pre_delete, sender=Transaction)
 def execute_before_delete(sender, instance, using, *args, **kwargs):
+    ## transac number
+    Meta_Stuff.decrement_lastnumber()
+
+    ## current Compte/budget
     c = Compte.objects.get(nom=instance.compte)
     c.somme_actuelle -= instance.somme  # change field
     c.save()  # this will update only

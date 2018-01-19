@@ -162,3 +162,5 @@ compta/migrations/
 compta/migrations/__pycache__/0005_transaction_date_traitement.cpython-36.pyc
 
 docs/
+
+db.sqlite3

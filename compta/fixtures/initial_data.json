@@ -1,0 +1,54 @@
+[
+  {
+  "model": "compta.compte",
+  "pk": 1,
+  "fields": {
+    "nom": "Poste",
+    "somme_depart": "1000.00",
+    "somme_actuelle": "1000.00"
+    }
+  },
+  {
+    "model": "compta.compte",
+    "pk": 2,
+    "fields": {
+      "nom": "Caisse",
+      "somme_depart": "500.00",
+      "somme_actuelle": "500.00"
+    }
+  },
+  {
+    "model":"compta.budget",
+    "pk": 1,
+    "fields": {
+      "nom": "Com. Culturelle",
+      "somme_depart": "1000.00",
+      "somme_actuelle": "1000.00"
+    }
+  },
+  {
+    "model": "compta.budget",
+    "pk": 2,
+    "fields": {
+      "nom": "Com. F\u00eate",
+      "somme_depart": "2000.00",
+      "somme_actuelle": "2000.00"
+    }
+  },
+  {
+    "model": "compta.budget",
+    "pk": 3,
+    "fields": {
+      "nom": "Bureau",
+      "somme_depart":"600.00",
+      "somme_actuelle": "600.00"
+    }
+  },
+  {
+    "model": "compta.meta_stuff",
+    "pk": 1,
+    "fields": {
+      "transac_number": 1
+    }
+  }
+]

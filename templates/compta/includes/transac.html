@@ -2,6 +2,7 @@
 <table class="table table-striped">
     <thead>
       <tr>
+        <th>Numéro</th>
         <th>Date</th>
         <th>Date de traitement</th>
         <th>Nom</th>
@@ -15,6 +16,7 @@
     <tbody>
         {% for c in object_list %}
             <tr>
+                <td><b>{{ c.numero }}</b></td>
                 <td>{{ c.date|date:"Y-m-d" }}</td>
                 <td>{{ c.date_traitement|date:"Y-m-d" }}</td>
                 <td>{{ c.nom }}</td>
@@ -36,8 +38,9 @@
                 </td>
                 <td>{{ c.description }}</td>
                 <td>
-                    {% if c.facture != None %}
-                        <a target="_blank" href="{{ c.facture.url }}"> {{ c.facture.name }}</a>
+
+                    {% if c.facture.name != "" %}
+                            <a target="_blank" href="{{ c.facture.url }}"> {{ c.facture_name }}</a>
                     {% else %}
                         <p>--</p>
                     {% endif %}
