@@ -6,6 +6,7 @@ from compta.models import Transaction, Compte, Budget
 import csv, xlwt, re
 from datetime import datetime
 from django.contrib.auth.decorators import login_required
+from compta.export import Export
 
 
 def hello(request):
@@ -117,7 +118,7 @@ def export_excel(data):
 
 
 @login_required
-def export(request):
+def export_old(request):
     export_type = request.GET.get('type', '')
     ref = request.GET.get('origin', '').strip("/")
     try:
@@ -156,6 +157,50 @@ def export(request):
         return reponse
     elif export_type == "Excel":
         reponse = export_excel(data)
+        return reponse
+
+
+    to_print = "<h2>{} {}</h2>".format(export_type, request.META["HTTP_REFERER"])
+    return HttpResponse(to_print)
+
+@login_required
+def export(request):
+    export_type = request.GET.get('type', '')
+    ref = request.GET.get('origin', '').strip("/")
+    try:
+        request.META["HTTP_REFERER"]
+    except:
+        raise Http404("NOT OK!! GET OUT --> [1]")
+
+    if re.match(r'(compte/\d+)|(budget/\d+)|transactions',ref) is None or export_type not in ["CSV","Excel","PDF"]:
+        raise Http404("NOT OK!! GET OUT --> [2]")
+
+    data={} # contiendra une somme de depart, une somme actuelle et une liste de transactions
+    if re.match(r'transactions', ref):
+        # prend  pour tous les comptes et budgets
+        comptes = Compte.objects.all()
+        budgets = Budget.objects.all()
+        exp = Export(comptes, budgets)
+
+
+    elif re.match(r'compte/\d+', ref):
+        pk = int(re.match(r"compte/(?P<pk>\d+)", ref)["pk"])
+        comptes = Compte.objects.filter(pk= pk)
+        exp = Export(comptes=comptes)
+
+    elif re.match(r'budget/\d+', ref):
+        pk = int(re.match(r"budget/(?P<pk>\d+)", ref)["pk"])
+        budgets = Budget.objects.filter(pk= pk)
+        exp = Export(budgets=budgets)
+
+    else:
+        raise Http404("NOT OK!! GET OUT --> [3]")
+
+    if export_type == "CSV":
+        reponse = exp.generate_csv()
+        return reponse
+    elif export_type == "Excel":
+        reponse = exp.generate_excel()
         return reponse
 
 

@@ -17,9 +17,9 @@
         {% for c in object_list %}
             <tr>
                 <td><b>{{ c.numero }}</b></td>
+                <td>{{ c.nom }}</td>
                 <td>{{ c.date|date:"Y-m-d" }}</td>
                 <td>{{ c.date_traitement|date:"Y-m-d" }}</td>
-                <td>{{ c.nom }}</td>
 
                 {% if  c.somme > 0 %}
                     <td class="bg-success">{{c.somme}}</td>
