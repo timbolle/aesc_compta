@@ -2,10 +2,12 @@ from compta.models import Transaction, Compte, Budget
 from django.db.models import Q
 from django.template.loader import render_to_string
 from django.conf import settings
-import csv, xlwt
+import csv, xlwt, subprocess, os
+from datetime import datetime
 from django.http import HttpResponse, Http404
 
 class Export():
+
     def __init__(self, comptes=None, budgets=None):
         self.comptes = comptes
         self.budgets = budgets
@@ -64,8 +66,26 @@ class Export():
     def generate_html(self):
         self.generate_data()
         content = render_to_string('compta/export_template.html', self.context)
-        with open(settings.MEDIA_ROOT + "export/export.html","w", encoding='utf-8') as f:
+        with open(Export.get_html_path() ,"w", encoding='utf-8') as f:
             f.write(content)
+
+    def generate_pdf(self):
+        self.generate_html()
+        command = "{} {} {}".format(r"E:\Wkhtmltopdf\bin\wkhtmltopdf.exe", Export.get_html_path(), Export.get_pdf_path())
+        print(command)
+        subprocess.run(command)
+        response = HttpResponse( open(Export.get_pdf_path(), "rb") ,content_type='application/pdf')
+        response['Content-Disposition'] = 'attachment; filename="export.pdf"'
+
+        return response
+
+
+    def pretty_transac(self):
+        self.context["transac"] = []
+        for t in self.transac:
+            temp = [t.numero, t.nom, datetime.strftime(t.date,"%Y-%m-%d"), datetime.strftime(t.date_traitement,"%Y-%m-%d"),
+                    t.somme, t.compte.nom, t.budget.nom if t.budget != None else None, t.description, t.facture.name ]
+            self.context["transac"].append(temp)
 
     def generate_csv(self):
         self.generate_data()
@@ -84,7 +104,8 @@ class Export():
             writer.writerow(self.context["total_budget"])
 
         writer.writerow(["numero", "nom", "date", "date_traitement", "montant", "compte", "budget", "description","facture"])
-        writer.writerows(self.context["transac"].values_list())
+        self.pretty_transac()
+        writer.writerows(self.context["transac"])
         writer.writerow(["total_depenses", "total_entrees"])
         writer.writerow([self.context["total_depense"], self.context["total_entree"]])
 
@@ -144,7 +165,8 @@ class Export():
                 ws.write(row_num, col_num, columns[col_num], font_style)
             # Sheet body, remaining rows
             font_style = xlwt.XFStyle()
-            for row in self.context["transac"].values_list():
+            self.pretty_transac()
+            for row in self.context["transac"]:
                 row_num += 1
                 for col_num in range(len(row)):
                     ws.write(row_num, col_num, row[col_num], font_style)
@@ -168,6 +190,14 @@ class Export():
         :return: the sum
         """
         return sum(map( lambda x: x[0], qs))
+
+    @staticmethod
+    def get_html_path():
+        return os.path.normcase(os.path.join(settings.MEDIA_ROOT, "export/export.html"))
+
+    @staticmethod
+    def get_pdf_path():
+        return os.path.normcase(os.path.join(settings.MEDIA_ROOT, "export/export.pdf"))
 
 
 if __name__ == '__main__':

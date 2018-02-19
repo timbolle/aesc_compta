@@ -18,6 +18,5 @@ urlpatterns = [
                         template_name="compta/transaction.html")),
     url(r'^compte/(?P<pk>\d+)$', views.detail_compte, name="detail_compte"),
     url(r'^budget/(?P<pk>\d+)$', views.detail_budget, name="detail_budget"),
-    url(r'^export2', views.export_csv, name="export_csv"),
     url(r'^export', views.export, name="export"),
 ]
