@@ -71,7 +71,8 @@ class Export():
 
     def generate_pdf(self):
         self.generate_html()
-        command = "{} {} {}".format(r"E:\Wkhtmltopdf\bin\wkhtmltopdf.exe", Export.get_html_path(), Export.get_pdf_path())
+        command = "{} {} {}".format(r"C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe", Export.get_html_path(), Export.get_pdf_path())
+        # command = "{} {} {}".format(r"E:\Wkhtmltopdf\bin\wkhtmltopdf.exe", Export.get_html_path(), Export.get_pdf_path())
         print(command)
         subprocess.run(command)
         response = HttpResponse( open(Export.get_pdf_path(), "rb") ,content_type='application/pdf')

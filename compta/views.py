@@ -74,11 +74,11 @@ def export(request):
         raise Http404("NOT OK!! GET OUT --> [3]")
 
     if export_type == "CSV":
-        reponse = exp.generate_csv()
-        return reponse
+        response = exp.generate_csv()
+        return response
     elif export_type == "Excel":
-        reponse = exp.generate_excel()
-        return reponse
+        response = exp.generate_excel()
+        return response
     elif export_type == "PDF":
         response = exp.generate_pdf()
         return response
