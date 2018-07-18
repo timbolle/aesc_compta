@@ -1,6 +1,7 @@
 from django.db import models
 from django.dispatch import receiver
 from datetime import datetime
+from django.shortcuts import get_object_or_404
 
 def facture_path(instance, filename):
     print(instance.numero)
@@ -39,14 +40,16 @@ class Meta_Stuff(models.Model):
         return self.transac_number
 
     @classmethod
-    def get_lastnumber(cls):
+    def get_lastnumber(cls, default=1):
         return cls.objects.get(pk=1).transac_number
+        # number = get_object_or_404(cls, pk=default)
+        # return number.transac_number
 
     @classmethod
     def increment_lastnumber(cls):
         new = cls.objects.get(pk=1)
         new.transac_number += 1
-        new.save()    \
+        new.save()
 
     @classmethod
     def decrement_lastnumber(cls):
@@ -58,6 +61,7 @@ class Meta_Stuff(models.Model):
 
 class Transaction(models.Model):
     numero = models.IntegerField(default=Meta_Stuff.get_lastnumber)
+    # numero = models.IntegerField(default=Meta_Stuff.objects.first().transac_number)
     nom = models.CharField(max_length=140)
     somme = models.DecimalField(max_digits=11, decimal_places=2)
     compte = models.ForeignKey(Compte, on_delete=models.CASCADE)
