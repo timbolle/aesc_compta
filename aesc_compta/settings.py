@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
+from dotenv import load_dotenv
+from pathlib import Path
+
+env_path = Path('.') / '.env'
+load_dotenv(dotenv_path=env_path)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -78,11 +83,11 @@ WSGI_APPLICATION = 'aesc_compta.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'aesc_compta_db',
-        'USER': 'aesc_compta_admin',
-        'PASSWORD': 'P4$$W0RD_4_P0$TGRE$QL',
-        'HOST': 'ginny.gryffindor.hg', # set in docker-compose.yml
-        'PORT': 5432 # default postgres port
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"), # set in docker-compose.yml
+        'PORT': os.getenv("DB_PORT") # default postgres port
     }
 }
 # DATABASES = {
