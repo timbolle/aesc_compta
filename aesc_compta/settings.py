@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -134,7 +135,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.11/howto/static-files/
 
-STATIC_URL = '/static/'
+# STATIC_URL = '/static/'
 
 
 
@@ -145,10 +146,22 @@ LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 # media root
-ENV_PATH = os.path.abspath(os.path.dirname(__file__))
-MEDIA_ROOT = os.path.join(BASE_DIR, 'docs/')
+# ENV_PATH = os.path.abspath(os.path.dirname(__file__))
+# MEDIA_ROOT = os.path.join(BASE_DIR, 'docs/')
+#
+# MEDIA_URL = "/docs/"
+AWS_QUERYSTRING_AUTH = False
+AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+AWS_ACCESS_KEY_ID = os.getenv("AWS_ACCESS_KEY_ID")
+AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
+S3_REGION = 's3.eu-west-3'
+AWS_S3_URL = 'https://{}.amazonaws.com/{}'.format(S3_REGION,AWS_STORAGE_BUCKET_NAME)
 
-MEDIA_URL = "/docs/"
 
+DEFAULT_FILE_STORAGE = 'aesc_compta.aws.utils.MediaRootS3BotoStorage'
+STATICFILES_STORAGE = 'aesc_compta.aws.utils.StaticRootS3BotoStorage'
 
+MEDIA_URL = '//{}.s3.amazonaws.com/media/'.format(AWS_STORAGE_BUCKET_NAME)
+MEDIA_ROOT = MEDIA_URL
+STATIC_URL = AWS_S3_URL + 'static/'
 
