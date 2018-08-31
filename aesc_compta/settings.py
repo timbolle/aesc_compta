@@ -30,7 +30,9 @@ SECRET_KEY = 'xzo=osczu3gh7hvw4al5kr$iqt*twtd9nxcl-hfv5$&wo@k$x_'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    "compta-aesc.herokuapp.com",
+]
 
 
 # Application definition
