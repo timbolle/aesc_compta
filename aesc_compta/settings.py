@@ -32,7 +32,8 @@ DEBUG = True
 
 ALLOWED_HOSTS = [
     "compta-aesc.herokuapp.com",
-    "127.0.0.1"
+    "127.0.0.1",
+    "timbolle.org"
 ]
 
 
