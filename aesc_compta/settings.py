@@ -28,12 +28,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = 'xzo=osczu3gh7hvw4al5kr$iqt*twtd9nxcl-hfv5$&wo@k$x_'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "compta-aesc.herokuapp.com",
     "127.0.0.1",
-    "timbolle.org"
+    "www.timbolle.org"
 ]
 
 
