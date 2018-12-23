@@ -79,9 +79,6 @@ class Transaction(models.Model):
         return self.facture.name.split('/')[-1]
 
 
-
-
-
 @receiver(models.signals.post_save, sender=Transaction)
 def execute_after_save(sender, instance, created, *args, **kwargs):
     if created:

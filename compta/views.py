@@ -3,10 +3,10 @@ from django.views.generic import ListView, DetailView
 from django.utils.decorators import method_decorator
 from django.http import HttpResponse, Http404
 from compta.models import Transaction, Compte, Budget
-import csv, xlwt, re
-from datetime import datetime
+import re
 from django.contrib.auth.decorators import login_required
 from compta.export import Export
+from compta.Other_functions import update_budget_and_comptes
 
 
 def hello(request):
@@ -14,11 +14,13 @@ def hello(request):
 
 @login_required
 def index(request):
+    update_budget_and_comptes()
     return render(request, 'compta/home.html')
 
 @login_required
 def detail_compte(request, pk):
     try:
+        update_budget_and_comptes()
         compte = Compte.objects.get(pk=pk)
         transac = Transaction.objects.filter(compte=pk)
     except:
@@ -28,6 +30,7 @@ def detail_compte(request, pk):
 @login_required
 def detail_budget(request, pk):
     try:
+        update_budget_and_comptes()
         budget = Budget.objects.get(pk=pk)
         transac = Transaction.objects.filter(budget=pk)
     except:
@@ -38,6 +41,7 @@ class ListingView(ListView):
 
     @method_decorator(login_required)
     def dispatch(self, request, *args, **kwargs):
+        update_budget_and_comptes()
         return super().dispatch(request, *args, **kwargs)
 
 
