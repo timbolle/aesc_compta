@@ -1,8 +1,20 @@
 {% extends "compta/header.html" %}
 {% block content %}
-    <h2 >Transactions</h2>
+    <div class="row">
+        <h2>Transactions</h2>
 
-    {% include 'compta/includes/transac.html' with object_list=object_list %}
+        <p>Montant initial: {{ total_depart}} CHF</p>
 
-    {% include 'compta/includes/export_snippet.html' %}
+        <h4><b>Montant disponible:
+            {% if   total_actuel > 0 %}
+                <span class="text-success">{{ total_actuel}} CHF</span>
+            {% else %}
+                <span class="text-danger"> {{total_actuel}} CHF</span>
+            {% endif %}
+        </b></h4>
+    </div>
+    <div class="row top-buffer">
+        {% include 'compta/includes/transac.html' with object_list=transac%}
+        {% include 'compta/includes/export_snippet.html' %}
+    </div>
 {% endblock %}

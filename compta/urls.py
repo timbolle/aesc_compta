@@ -13,9 +13,7 @@ urlpatterns = [
     url(r'^budgets$', views.ListingView.as_view(
                         queryset=Budget.objects.all().order_by("nom"),
                         template_name="compta/budget.html")),
-    url(r'^transactions$', views.ListingView.as_view(
-                        queryset=Transaction.objects.all().order_by("-date"),
-                        template_name="compta/transaction.html")),
+    url(r'^transactions$', views.transactions, name="transactions"),
     url(r'^compte/(?P<pk>\d+)$', views.detail_compte, name="detail_compte"),
     url(r'^budget/(?P<pk>\d+)$', views.detail_budget, name="detail_budget"),
     url(r'^export', views.export, name="export"),

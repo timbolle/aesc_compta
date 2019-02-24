@@ -6,7 +6,8 @@ from compta.models import Transaction, Compte, Budget
 import re
 from django.contrib.auth.decorators import login_required
 from compta.export import Export
-from compta.Other_functions import update_budget_and_comptes
+from compta.other_functions import update_budget_and_comptes
+from django.db.models import Sum
 
 
 def hello(request):
@@ -16,6 +17,18 @@ def hello(request):
 def index(request):
     update_budget_and_comptes()
     return render(request, 'compta/home.html')
+
+@login_required
+def transactions(request):
+    try:
+        update_budget_and_comptes()
+        total_depart = Compte.objects.aggregate(total_somme_depart= Sum('somme_depart'))["total_somme_depart"]
+        total_actuel = Compte.objects.aggregate(total_somme_actuelle= Sum('somme_actuelle'))["total_somme_actuelle"]
+        transac = Transaction.objects.all().order_by("-date")
+    except:
+        raise Http404("Something went wrong...")
+    return render(request, "compta/transaction.html", {'total_depart': total_depart, 'total_actuel': total_actuel, 'transac':transac})
+
 
 @login_required
 def detail_compte(request, pk):

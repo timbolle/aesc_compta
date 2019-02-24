@@ -6,8 +6,8 @@
 	<meta charset="utf-8" />
 	{% load static %}
 	<link rel="stylesheet" href="{% static 'bootstrap/css/bootstrap.min.css' %}" type = "text/css"/>
-{#    <link rel="stylesheet" type="text/css" href="{% static 'DataTables/DataTables-1.10.18/css/jquery.dataTables.css' %}"/>#}
-    <link rel="stylesheet" type="text/css" href="{% static 'DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css' %}"/>
+    <link rel="stylesheet" href="{% static 'compta/css/compta.css' %}" type="text/css"/>
+{#    <link rel="stylesheet" type="text/css" href="{% static 'DataTables/DataTables-1.10.18/css/dataTables.bootstrap4.css' %}"/>#}
     <script src="{% static 'jquery/jquery-3.2.1.min.js' %}"></script>
     <script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/bs4/jszip-2.5.0/dt-1.10.18/b-1.5.4/b-flash-1.5.4/b-html5-1.5.4/b-print-1.5.4/fh-3.1.4/datatables.min.css"/>
@@ -50,11 +50,8 @@
             </div>
 		</div><hr>
 
-		<div class="row">
+		<div class="row top-buffer">
 		  <div class="col-sm-2">
-		  <br>
-
-		  <br>
 		   <!-- Great, til you resize. -->
 			<!--<div class="well bs-sidebar affix" id="sidebar" style="background-color:#fff">-->
 			<div class="well bs-sidebar" id="sidebar" style="background-color:#fff">
@@ -69,7 +66,6 @@
 		  <div class="col-sm-10">
 
 			<div class='container-fluid'>
-			<br><br>
 			   {% block content %}
 			   {% endblock %}
 			</div>

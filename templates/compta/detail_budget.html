@@ -1,13 +1,20 @@
 {% extends "compta/header.html" %}
 {% block content %}
-    <h2>Transactions du compte {{ budget.nom }}</h2>
+    <div class="row">
+        <h2>Transactions du compte {{ budget.nom }}</h2>
 
-    <p>Montant initial: {{ budget.somme_depart }} CHF</p>
+        <p>Montant initial: {{ budget.somme_depart }} CHF</p>
 
-    {% include 'compta/includes/transac.html' with object_list=transac%}
-
-    <p>Montant final: {{ budget.somme_actuelle }} CHF</p>
-
-    {% include 'compta/includes/export_snippet.html' %}
-
+        <h4><b>Montant disponible:
+            {% if   budget.somme_actuelle > 0 %}
+                <span class="text-success">{{ budget.somme_actuelle}} CHF</span>
+            {% else %}
+                <span class="text-danger"> {{budget.somme_actuelle}} CHF</span>
+            {% endif %}
+        </b></h4>
+    </div>
+    <div class="row top-buffer">
+        {% include 'compta/includes/transac.html' with object_list=transac%}
+        {% include 'compta/includes/export_snippet.html' %}
+    </div>
 {% endblock %}
